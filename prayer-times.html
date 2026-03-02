@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>المصلي - مواقيت الصلاة</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --teal: #0D7377;
+    --teal-dark: #0A5759;
+    --sky: #87CEEB;
+    --night: #0B1437;
+    --night-mid: #132040;
+    --cream: #FFF8E7;
+    --text-light: #F0EAD6;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Cairo', sans-serif;
+    background: var(--night);
+    color: var(--text-light);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Stars background */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: 
+      radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,0.8) 0%, transparent 100%),
+      radial-gradient(1px 1px at 25% 8%, rgba(255,255,255,0.6) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 40% 22%, rgba(255,255,255,0.9) 0%, transparent 100%),
+      radial-gradient(1px 1px at 60% 5%, rgba(255,255,255,0.7) 0%, transparent 100%),
+      radial-gradient(1px 1px at 75% 18%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 88% 10%, rgba(255,255,255,0.8) 0%, transparent 100%),
+      radial-gradient(1px 1px at 15% 40%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 55% 35%, rgba(255,255,255,0.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 92% 30%, rgba(255,255,255,0.5) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* HERO SECTION */
+  .hero {
+    position: relative;
+    min-height: 420px;
+    background: linear-gradient(180deg, #0B1437 0%, #1a3a6b 40%, #2d6fa8 70%, #87CEEB 100%);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+  }
+
+  /* Moon */
+  .moon {
+    position: absolute;
+    top: 30px;
+    right: 60px;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #FFFDE7, #F5D060);
+    box-shadow: 0 0 30px 10px rgba(245, 208, 96, 0.4), 0 0 60px 20px rgba(245, 208, 96, 0.2);
+    animation: moonGlow 3s ease-in-out infinite alternate;
+  }
+
+  .moon::after {
+    content: '';
+    position: absolute;
+    top: 8px; right: 8px;
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    background: transparent;
+    box-shadow: -12px -5px 0 2px rgba(0,0,0,0.08);
+  }
+
+  @keyframes moonGlow {
+    from { box-shadow: 0 0 30px 10px rgba(245, 208, 96, 0.4), 0 0 60px 20px rgba(245, 208, 96, 0.2); }
+    to { box-shadow: 0 0 40px 15px rgba(245, 208, 96, 0.6), 0 0 80px 30px rgba(245, 208, 96, 0.3); }
+  }
+
+  /* Header */
+  .app-header {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(11,20,55,0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(201,168,76,0.3);
+    padding: 8px 20px;
+    border-radius: 50px;
+    margin-bottom: 20px;
+  }
+
+  .app-header .crown { font-size: 1.2rem; }
+  .app-header h1 {
+    font-family: 'Amiri', serif;
+    font-size: 1.4rem;
+    color: var(--gold-light);
+    letter-spacing: 1px;
+  }
+
+  /* Countdown */
+  .countdown-section {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  .next-prayer-label {
+    font-size: 1rem;
+    color: var(--gold-light);
+    opacity: 0.9;
+    margin-bottom: 5px;
+  }
+
+  .next-prayer-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 8px;
+  }
+
+  .timer-display {
+    font-family: 'Amiri', serif;
+    font-size: 4rem;
+    font-weight: 700;
+    color: white;
+    letter-spacing: 4px;
+    text-shadow: 0 0 30px rgba(201,168,76,0.5);
+    line-height: 1;
+    margin-bottom: 15px;
+  }
+
+  .location-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(13,115,119,0.6);
+    border: 1px solid var(--teal);
+    padding: 6px 16px;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .location-badge:hover { background: var(--teal); }
+  .location-badge .icon { font-size: 1rem; }
+
+  /* Mosque Silhouette */
+  .mosque-silhouette {
+    position: absolute;
+    bottom: 0;
+    left: 0; right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    height: 160px;
+    pointer-events: none;
+  }
+
+  .mosque-svg {
+    width: 100%;
+    max-width: 800px;
+  }
+
+  /* MAIN CONTENT */
+  .main-content {
+    position: relative;
+    z-index: 5;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px 16px;
+  }
+
+  /* Date Bar */
+  .date-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 12px;
+    padding: 12px 20px;
+    margin-bottom: 20px;
+    backdrop-filter: blur(10px);
+  }
+
+  .date-bar .hijri {
+    font-size: 0.95rem;
+    color: var(--gold-light);
+    font-weight: 600;
+  }
+
+  .date-bar .gregorian {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.7);
+  }
+
+  /* Prayer Cards Grid */
+  .prayers-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  @media (min-width: 600px) {
+    .prayers-grid { grid-template-columns: repeat(6, 1fr); }
+  }
+
+  .prayer-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(201,168,76,0.15);
+    border-radius: 16px;
+    padding: 16px 10px;
+    text-align: center;
+    transition: all 0.3s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .prayer-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: transparent;
+    transition: all 0.3s;
+  }
+
+  .prayer-card:hover {
+    background: rgba(201,168,76,0.1);
+    border-color: rgba(201,168,76,0.4);
+    transform: translateY(-2px);
+  }
+
+  .prayer-card.active {
+    background: linear-gradient(135deg, rgba(13,115,119,0.4), rgba(13,87,89,0.4));
+    border-color: var(--teal);
+    box-shadow: 0 0 20px rgba(13,115,119,0.3);
+  }
+
+  .prayer-card.active::before {
+    background: var(--teal);
+  }
+
+  .prayer-card .prayer-icon { font-size: 1.6rem; margin-bottom: 6px; }
+  .prayer-card .prayer-name { font-size: 0.85rem; font-weight: 700; color: var(--text-light); margin-bottom: 4px; }
+  .prayer-card .prayer-time { font-size: 0.8rem; color: var(--gold-light); font-weight: 600; }
+
+  /* Extra Info Cards */
+  .info-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .info-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 14px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .info-card .label { font-size: 0.8rem; color: rgba(255,255,255,0.6); margin-bottom: 3px; }
+  .info-card .value { font-size: 1rem; font-weight: 700; color: var(--gold-light); }
+
+  /* Qibla Section */
+  .qibla-section {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 20px;
+    padding: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .qibla-section h3 {
+    font-family: 'Amiri', serif;
+    font-size: 1.2rem;
+    color: var(--gold-light);
+    margin-bottom: 16px;
+  }
+
+  .compass {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto;
+    border-radius: 50%;
+    background: radial-gradient(circle, #1a2a5e, #0b1437);
+    border: 2px solid var(--gold);
+    position: relative;
+    box-shadow: 0 0 20px rgba(201,168,76,0.2);
+    animation: compassSpin 8s linear infinite;
+  }
+
+  @keyframes compassSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .compass-needle {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    width: 4px;
+    height: 50px;
+    background: linear-gradient(to top, #e74c3c, white);
+    border-radius: 2px;
+    transform-origin: bottom center;
+  }
+
+  .compass-center {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--gold);
+    z-index: 2;
+  }
+
+  /* Ramadan Banner */
+  .ramadan-banner {
+    background: linear-gradient(135deg, #1a2a5e, #2d1a5e);
+    border: 1px solid rgba(201,168,76,0.4);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ramadan-banner::before {
+    content: '🌙';
+    position: absolute;
+    font-size: 5rem;
+    opacity: 0.1;
+    right: 10px;
+    top: -10px;
+  }
+
+  .ramadan-banner .banner-text h3 {
+    font-family: 'Amiri', serif;
+    font-size: 1.1rem;
+    color: var(--gold-light);
+    margin-bottom: 4px;
+  }
+
+  .ramadan-banner .banner-text p {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.7);
+  }
+
+  .ramadan-timer {
+    display: flex;
+    gap: 8px;
+  }
+
+  .r-time-block {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 8px;
+    padding: 6px 10px;
+    text-align: center;
+    min-width: 44px;
+  }
+
+  .r-time-block .r-num {
+    font-size: 1.2rem;
+    font-weight: 900;
+    color: var(--gold-light);
+    display: block;
+    line-height: 1;
+  }
+
+  .r-time-block .r-label {
+    font-size: 0.6rem;
+    color: rgba(255,255,255,0.6);
+  }
+
+  /* Ayah Section */
+  .ayah-section {
+    background: linear-gradient(135deg, rgba(13,115,119,0.2), rgba(11,20,55,0.8));
+    border: 1px solid rgba(13,115,119,0.3);
+    border-radius: 20px;
+    padding: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .ayah-section .arabic-text {
+    font-family: 'Amiri', serif;
+    font-size: 1.4rem;
+    line-height: 2;
+    color: var(--gold-light);
+    margin-bottom: 12px;
+  }
+
+  .ayah-section .translation {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.6;
+  }
+
+  .ayah-section .ayah-ref {
+    margin-top: 10px;
+    font-size: 0.75rem;
+    color: var(--teal);
+    font-weight: 600;
+  }
+
+  /* Tasbeeh Counter */
+  .tasbeeh-section {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+    padding: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .tasbeeh-section h3 {
+    font-size: 1rem;
+    color: var(--gold-light);
+    margin-bottom: 16px;
+  }
+
+  .tasbeeh-counter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .counter-circle {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #1a3a6b, #0b1437);
+    border: 3px solid var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: white;
+    cursor: pointer;
+    transition: all 0.1s;
+    box-shadow: 0 0 20px rgba(201,168,76,0.2);
+    user-select: none;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .counter-circle:active {
+    transform: scale(0.95);
+    box-shadow: 0 0 30px rgba(201,168,76,0.4);
+  }
+
+  .counter-circle::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 0; height: 0;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s, height 0.3s;
+  }
+
+  .counter-circle:active::after {
+    width: 150px; height: 150px;
+  }
+
+  .tasbeeh-buttons {
+    display: flex;
+    gap: 12px;
+  }
+
+  .tasbeeh-btn {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: white;
+    padding: 8px 20px;
+    border-radius: 30px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .tasbeeh-btn.reset { color: #e74c3c; border-color: rgba(231,76,60,0.3); }
+  .tasbeeh-btn:hover { background: rgba(255,255,255,0.1); }
+
+  .tasbeeh-select {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(201,168,76,0.3);
+    color: var(--gold-light);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.85rem;
+    outline: none;
+    cursor: pointer;
+    width: 100%;
+    max-width: 250px;
+    text-align: center;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.3);
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+
+  /* Pulse animation for active prayer */
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  .active-dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    background: #2ecc71;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+    margin-left: 4px;
+    vertical-align: middle;
+  }
+
+  /* Section titles */
+  .section-title {
+    font-family: 'Amiri', serif;
+    font-size: 1.1rem;
+    color: var(--gold-light);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to left, transparent, rgba(201,168,76,0.3));
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="moon"></div>
+
+  <div class="app-header">
+    <span class="crown">👑</span>
+    <h1>المصلّي</h1>
+  </div>
+
+  <div class="countdown-section">
+    <div class="next-prayer-label">الصلاة القادمة</div>
+    <div class="next-prayer-name" id="nextPrayerName">العصر</div>
+    <div class="timer-display" id="countdown">00:00:00</div>
+    <div class="location-badge" onclick="getLocation()">
+      <span class="icon">📍</span>
+      <span id="locationText">تحديد موقعك</span>
+    </div>
+  </div>
+
+  <!-- Mosque SVG Silhouette -->
+  <div class="mosque-silhouette">
+    <svg class="mosque-svg" viewBox="0 0 800 160" xmlns="http://www.w3.org/2000/svg">
+      <!-- Main dome -->
+      <ellipse cx="400" cy="80" rx="80" ry="80" fill="#1a3a6b" opacity="0.9"/>
+      <rect x="320" y="80" width="160" height="80" fill="#1a3a6b" opacity="0.9"/>
+      <!-- Left dome -->
+      <ellipse cx="250" cy="100" rx="50" ry="50" fill="#132040" opacity="0.9"/>
+      <rect x="200" y="100" width="100" height="60" fill="#132040" opacity="0.9"/>
+      <!-- Right dome -->
+      <ellipse cx="550" cy="100" rx="50" ry="50" fill="#132040" opacity="0.9"/>
+      <rect x="500" y="100" width="100" height="60" fill="#132040" opacity="0.9"/>
+      <!-- Left minaret -->
+      <rect x="130" y="30" width="20" height="130" fill="#0b1437" opacity="0.95"/>
+      <polygon points="130,30 140,5 150,30" fill="#0b1437" opacity="0.95"/>
+      <ellipse cx="140" cy="30" rx="15" ry="5" fill="#C9A84C" opacity="0.6"/>
+      <!-- Right minaret -->
+      <rect x="650" y="30" width="20" height="130" fill="#0b1437" opacity="0.95"/>
+      <polygon points="650,30 660,5 670,30" fill="#0b1437" opacity="0.95"/>
+      <ellipse cx="660" cy="30" rx="15" ry="5" fill="#C9A84C" opacity="0.6"/>
+      <!-- Base -->
+      <rect x="0" y="140" width="800" height="20" fill="#0b1437" opacity="0.95"/>
+      <!-- Gold crescent on main dome -->
+      <text x="390" y="45" font-size="24" fill="#C9A84C" opacity="0.8">☽</text>
+    </svg>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main-content">
+
+  <!-- Date Bar -->
+  <div class="date-bar">
+    <div class="hijri" id="hijriDate">12 رمضان 1447</div>
+    <div class="gregorian" id="gregDate">الاثنين، 2 مارس 2026</div>
+  </div>
+
+  <!-- Prayer Times -->
+  <div class="section-title">🕌 مواقيت الصلاة</div>
+  <div class="prayers-grid" id="prayersGrid"></div>
+
+  <!-- Suhoor / Iftar -->
+  <div class="ramadan-banner">
+    <div class="banner-text">
+      <h3>🌙 رمضان المبارك</h3>
+      <p>السحور - الإفطار</p>
+    </div>
+    <div class="ramadan-timer">
+      <div class="r-time-block">
+        <span class="r-num" id="r-h">00</span>
+        <span class="r-label">ساعة</span>
+      </div>
+      <div class="r-time-block">
+        <span class="r-num" id="r-m">00</span>
+        <span class="r-label">دقيقة</span>
+      </div>
+      <div class="r-time-block">
+        <span class="r-num" id="r-s">00</span>
+        <span class="r-label">ثانية</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Extra Info -->
+  <div class="info-row">
+    <div class="info-card">
+      <div>
+        <div class="label">منتصف الليل</div>
+        <div class="value" id="midnight">12:20</div>
+      </div>
+      <span style="font-size:1.5rem">🌃</span>
+    </div>
+    <div class="info-card">
+      <div>
+        <div class="label">الثلث الأخير</div>
+        <div class="value" id="lastThird">02:11</div>
+      </div>
+      <span style="font-size:1.5rem">⭐</span>
+    </div>
+  </div>
+
+  <!-- Qibla -->
+  <div class="qibla-section">
+    <h3>⬆️ اتجاه القبلة</h3>
+    <div class="compass" id="compass">
+      <div class="compass-needle"></div>
+      <div class="compass-center"></div>
+    </div>
+    <p style="margin-top:12px; font-size:0.85rem; color:rgba(255,255,255,0.6)">
+      انقر لتفعيل البوصلة
+    </p>
+  </div>
+
+  <!-- Ayah of the Day -->
+  <div class="section-title">📖 آية اليوم</div>
+  <div class="ayah-section">
+    <div class="arabic-text" id="ayahText">
+      ﴿ وَأَقِيمُوا الصَّلَاةَ وَآتُوا الزَّكَاةَ وَارْكَعُوا مَعَ الرَّاكِعِينَ ﴾
+    </div>
+    <div class="translation">أقيموا الصلاة في أوقاتها وأدّوا الزكاة وصلّوا مع المصلين</div>
+    <div class="ayah-ref">سورة البقرة - الآية 43</div>
+  </div>
+
+  <!-- Tasbeeh Counter -->
+  <div class="section-title">📿 عداد التسبيح</div>
+  <div class="tasbeeh-section">
+    <select class="tasbeeh-select" id="tasbeehSelect" onchange="changeTasbeeh()">
+      <option value="سبحان الله">سبحان الله</option>
+      <option value="الحمد لله">الحمد لله</option>
+      <option value="الله أكبر">الله أكبر</option>
+      <option value="لا إله إلا الله">لا إله إلا الله</option>
+      <option value="اللهم صل على محمد">الصلاة على النبي</option>
+    </select>
+    <div class="tasbeeh-counter">
+      <div class="counter-circle" id="counterCircle" onclick="incrementCounter()">
+        <span id="counterNum">0</span>
+      </div>
+      <div class="tasbeeh-buttons">
+        <button class="tasbeeh-btn reset" onclick="resetCounter()">إعادة تعيين</button>
+        <button class="tasbeeh-btn" onclick="setTarget()">الهدف: <span id="targetDisplay">33</span></button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>المصلي © 2026 — جميع الحقوق محفوظة</footer>
+
+<script>
+// ---- Prayer Times Data (static demo for Algeria/Blida) ----
+const prayers = [
+  { name: 'الفجر',   icon: '🌙', time: '05:54', timeMin: 354 },
+  { name: 'الشروق',  icon: '🌅', time: '07:20', timeMin: 440 },
+  { name: 'الظهر',   icon: '☀️', time: '13:01', timeMin: 781 },
+  { name: 'العصر',   icon: '🌤️', time: '16:15', timeMin: 975 },
+  { name: 'المغرب',  icon: '🌆', time: '18:47', timeMin: 1127 },
+  { name: 'العشاء',  icon: '🌙', time: '20:04', timeMin: 1204 },
+];
+
+// Render prayer cards
+function renderPrayers() {
+  const now = new Date();
+  const nowMin = now.getHours() * 60 + now.getMinutes();
+  
+  let nextIdx = prayers.findIndex(p => p.timeMin > nowMin);
+  if (nextIdx === -1) nextIdx = 0;
+  
+  const grid = document.getElementById('prayersGrid');
+  grid.innerHTML = '';
+  prayers.forEach((p, i) => {
+    const isActive = i === nextIdx;
+    const div = document.createElement('div');
+    div.className = 'prayer-card' + (isActive ? ' active' : '');
+    div.innerHTML = `
+      <div class="prayer-icon">${p.icon}</div>
+      <div class="prayer-name">${p.name}</div>
+      <div class="prayer-time">${p.time}</div>
+      ${isActive ? '<div style="margin-top:4px"><span class="active-dot"></span><span style="font-size:0.65rem;color:#2ecc71"> قادمة</span></div>' : ''}
+    `;
+    grid.appendChild(div);
+  });
+
+  return { nextIdx, nowMin };
+}
+
+// Countdown timer
+function updateCountdown() {
+  const now = new Date();
+  const nowMin = now.getHours() * 60 + now.getMinutes() + now.getSeconds() / 60;
+  
+  let nextIdx = prayers.findIndex(p => p.timeMin > nowMin);
+  if (nextIdx === -1) nextIdx = 0;
+  
+  const nextPrayer = prayers[nextIdx];
+  document.getElementById('nextPrayerName').textContent = nextPrayer.name;
+  
+  let diffMin = nextPrayer.timeMin - nowMin;
+  if (diffMin < 0) diffMin += 1440;
+  
+  const diffSec = Math.floor(diffMin * 60);
+  const h = Math.floor(diffSec / 3600);
+  const m = Math.floor((diffSec % 3600) / 60);
+  const s = diffSec % 60;
+  
+  document.getElementById('countdown').textContent = 
+    `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+
+// Date display
+function updateDate() {
+  const now = new Date();
+  const days = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+  const months = ['يناير','فبراير','مارس','أبريل','مايو','يونيو',
+                  'يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+  document.getElementById('gregDate').textContent = 
+    `${days[now.getDay()]}، ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+}
+
+// Ramadan countdown (to Maghrib = Iftar)
+function updateRamadan() {
+  const now = new Date();
+  const nowMin = now.getHours() * 60 + now.getMinutes();
+  const iftarMin = 1127; // Maghrib
+  let diff = (iftarMin - nowMin) * 60 - now.getSeconds();
+  if (diff < 0) diff += 86400;
+  
+  const h = Math.floor(diff / 3600);
+  const m = Math.floor((diff % 3600) / 60);
+  const s = diff % 60;
+  
+  document.getElementById('r-h').textContent = String(h).padStart(2,'0');
+  document.getElementById('r-m').textContent = String(m).padStart(2,'0');
+  document.getElementById('r-s').textContent = String(s).padStart(2,'0');
+}
+
+// Location
+function getLocation() {
+  if (!navigator.geolocation) {
+    document.getElementById('locationText').textContent = 'غير مدعوم';
+    return;
+  }
+  document.getElementById('locationText').textContent = 'جاري التحديد...';
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      document.getElementById('locationText').textContent = `${pos.coords.latitude.toFixed(2)}° , ${pos.coords.longitude.toFixed(2)}°`;
+    },
+    () => {
+      document.getElementById('locationText').textContent = 'البليدة، الجزائر';
+    }
+  );
+}
+
+// Compass
+let compassActive = false;
+document.getElementById('compass').addEventListener('click', () => {
+  if (!compassActive && window.DeviceOrientationEvent) {
+    window.addEventListener('deviceorientationabsolute', handleOrientation);
+    compassActive = true;
+  }
+});
+
+function handleOrientation(e) {
+  const alpha = e.alpha || 0;
+  const needle = document.querySelector('.compass-needle');
+  if (needle) {
+    needle.style.transform = `translate(-50%, -100%) rotate(${-alpha + 45}deg)`;
+    needle.style.transformOrigin = 'center bottom';
+    needle.style.position = 'absolute';
+    needle.style.bottom = '50%';
+    needle.style.left = '50%';
+  }
+  document.getElementById('compass').style.animation = 'none';
+}
+
+// Tasbeeh Counter
+let count = 0;
+let target = 33;
+
+function incrementCounter() {
+  count++;
+  document.getElementById('counterNum').textContent = count;
+  if (count >= target) {
+    document.getElementById('counterCircle').style.borderColor = '#2ecc71';
+    document.getElementById('counterCircle').style.boxShadow = '0 0 30px rgba(46,204,113,0.5)';
+  }
+}
+
+function resetCounter() {
+  count = 0;
+  document.getElementById('counterNum').textContent = 0;
+  document.getElementById('counterCircle').style.borderColor = 'var(--gold)';
+  document.getElementById('counterCircle').style.boxShadow = '0 0 20px rgba(201,168,76,0.2)';
+}
+
+function changeTasbeeh() {
+  resetCounter();
+}
+
+function setTarget() {
+  const t = prompt('أدخل الهدف:', target);
+  if (t && !isNaN(t)) {
+    target = parseInt(t);
+    document.getElementById('targetDisplay').textContent = target;
+    resetCounter();
+  }
+}
+
+// Rotate daily ayah
+const ayahs = [
+  { ar: '﴿ وَأَقِيمُوا الصَّلَاةَ وَآتُوا الزَّكَاةَ وَارْكَعُوا مَعَ الرَّاكِعِينَ ﴾', tr: 'أقيموا الصلاة وأدّوا الزكاة وصلّوا مع المصلين', ref: 'سورة البقرة - 43' },
+  { ar: '﴿ إِنَّ الصَّلَاةَ تَنْهَىٰ عَنِ الْفَحْشَاءِ وَالْمُنكَرِ ﴾', tr: 'إن الصلاة تنهى عن الأخلاق السيئة والأعمال المنكرة', ref: 'سورة العنكبوت - 45' },
+  { ar: '﴿ حَافِظُوا عَلَى الصَّلَوَاتِ وَالصَّلَاةِ الْوُسْطَىٰ ﴾', tr: 'حافظوا على الصلوات الخمس وخاصة العصر', ref: 'سورة البقرة - 238' },
+];
+const dayAyah = ayahs[new Date().getDay() % ayahs.length];
+document.getElementById('ayahText').textContent = dayAyah.ar;
+document.querySelector('.ayah-section .translation').textContent = dayAyah.tr;
+document.querySelector('.ayah-section .ayah-ref').textContent = dayAyah.ref;
+
+// Init & intervals
+renderPrayers();
+updateDate();
+updateCountdown();
+updateRamadan();
+
+setInterval(() => {
+  updateCountdown();
+  updateRamadan();
+}, 1000);
+
+setInterval(renderPrayers, 60000);
+</script>
+</body>
+</html>
