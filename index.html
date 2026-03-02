@@ -985,87 +985,124 @@ const COUNTRIES = {
   },
 };
 
-// ══════════════ PRAYER CALC (Adhan.js algorithm) ══════════════
+// ══════════════ PRAYER CALC — Fixed UTC+TZ approach ══════════════
 const calcMethods = {
-  MWL:    {fajrAngle:18, ishaAngle:17},
-  ISNA:   {fajrAngle:15, ishaAngle:15},
+  MWL:    {fajrAngle:18,   ishaAngle:17},
+  ISNA:   {fajrAngle:15,   ishaAngle:15},
   Egypt:  {fajrAngle:19.5, ishaAngle:17.5},
   Makkah: {fajrAngle:18.5, ishaInterval:90},
-  Karachi:{fajrAngle:18, ishaAngle:18},
+  Karachi:{fajrAngle:18,   ishaAngle:18},
   Tehran: {fajrAngle:17.7, ishaAngle:14},
-  Jafari: {fajrAngle:16, ishaAngle:14},
+  Jafari: {fajrAngle:16,   ishaAngle:14},
 };
 
-function toRad(d){return d*Math.PI/180;}
-function toDeg(r){return r*180/Math.PI;}
-function fixAngle(a){return a-360*Math.floor(a/360);}
-function fixHour(a){return a-24*Math.floor(a/24);}
+const R2D = 180/Math.PI, D2R = Math.PI/180;
+const fix360 = a => a - 360*Math.floor(a/360);
+const fix24  = h => h - 24 *Math.floor(h/24);
 
-function sunEquation(d){
-  const g=fixAngle(357.529+0.98560028*d);
-  const q=fixAngle(280.459+0.98564736*d);
-  const L=fixAngle(q+1.9151*Math.sin(toRad(g))+0.020*Math.sin(toRad(2*g)));
-  const e=23.439-0.00000036*d;
-  const RA=toDeg(Math.atan2(Math.cos(toRad(e))*Math.sin(toRad(L)),Math.cos(toRad(L))))/15;
-  const eqT=q/15-fixHour(RA);
-  const decl=toDeg(Math.asin(Math.sin(toRad(e))*Math.sin(toRad(L))));
-  return {eqT, decl};
+/* Get UTC offset in hours for a given IANA timezone string */
+function getTZOffset(tzName, date){
+  try{
+    // Use Intl to get the UTC offset for the given tz on the given date
+    const parts = new Intl.DateTimeFormat('en-US',{
+      timeZone: tzName,
+      hour:'numeric', hour12:false,
+      timeZoneName:'short'
+    }).formatToParts(date);
+    // fallback: format to two locales and diff
+    const utcStr = date.toLocaleString('en-US',{timeZone:'UTC', hour12:false,
+      year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    const locStr = date.toLocaleString('en-US',{timeZone:tzName, hour12:false,
+      year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    const utcD = new Date(utcStr), locD = new Date(locStr);
+    return (locD - utcD) / 3600000; // hours
+  }catch(e){
+    return -date.getTimezoneOffset()/60;
+  }
 }
 
-function julianDay(date){
-  let Y=date.getFullYear(),M=date.getMonth()+1,D=date.getDate();
+/* Julian Day (UTC noon) */
+function julianDay(Y,M,D){
   if(M<=2){Y--;M+=12;}
-  const A=Math.floor(Y/100);
-  const B=2-A+Math.floor(A/4);
+  const A=Math.floor(Y/100), B=2-A+Math.floor(A/4);
   return Math.floor(365.25*(Y+4716))+Math.floor(30.6001*(M+1))+D+B-1524.5;
 }
 
-function sunAngleTime(d,angle,lat,lng,dir){
-  const {eqT,decl}=sunEquation(d);
-  const cos=(-Math.sin(toRad(angle))-Math.sin(toRad(lat))*Math.sin(toRad(decl)))/(Math.cos(toRad(lat))*Math.cos(toRad(decl)));
+/* Sun position for a given Julian Day */
+function sunPos(jd){
+  const d = jd - 2451545.0;
+  const g = fix360(357.529 + 0.98560028*d) * D2R;
+  const q = fix360(280.459 + 0.98564736*d);
+  const L = fix360(q + 1.9151*Math.sin(g) + 0.020*Math.sin(2*g)) * D2R;
+  const e = (23.439 - 0.00000036*d) * D2R;
+  const RA = Math.atan2(Math.cos(e)*Math.sin(L), Math.cos(L)) * R2D / 15;
+  const eqT = q/15 - fix24(RA);          // equation of time (hours)
+  const decl = Math.asin(Math.sin(e)*Math.sin(L)) * R2D;  // declination (degrees)
+  return {eqT, decl};
+}
+
+/* Hour angle for a given altitude angle */
+function hourAngle(alt, lat, decl){
+  const cos = (Math.sin(alt*D2R) - Math.sin(lat*D2R)*Math.sin(decl*D2R))
+              / (Math.cos(lat*D2R)*Math.cos(decl*D2R));
   if(Math.abs(cos)>1) return NaN;
-  const t=toDeg(Math.acos(cos))/15;
-  return 12-eqT-lng/15+(dir==='ccw'?-t:t);
+  return Math.acos(cos) * R2D / 15; // hours
 }
 
-function asrTime(d,factor,lat,lng){
-  const {eqT,decl}=sunEquation(d);
-  const angle=-toDeg(Math.atan(1/(factor+Math.tan(toRad(Math.abs(lat-decl))))));
-  return sunAngleTime(d,angle,lat,lng,'cw');
-}
+/* Compute all prayer times
+   Returns array of {name,icon,time,min} in LOCAL time of the given timezone */
+function computePrayers(lat, lng, date, method, tzName){
+  method = method || 'Egypt';
+  tzName = tzName || userTZ || Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-function computePrayers(lat,lng,date,method='Egypt'){
-  const jd=julianDay(date)-lng/360;
-  const m=calcMethods[method]||calcMethods.Egypt;
-  const {eqT,decl}=sunEquation(jd);
-  const noon=12-eqT-lng/15;
-  const sunrise=sunAngleTime(jd,-0.8333,lat,lng,'ccw');
-  const sunset=sunAngleTime(jd,-0.8333,lat,lng,'cw');
-  const fajr=sunAngleTime(jd,-m.fajrAngle,lat,lng,'ccw');
-  const asr=asrTime(jd,1,lat,lng);
-  let isha;
-  if(m.ishaInterval) isha=sunset+m.ishaInterval/60;
-  else isha=sunAngleTime(jd,-m.ishaAngle,lat,lng,'cw');
-  const toHHMM=(h)=>{
-    const tz=new Date().getTimezoneOffset()/-60;
-    let hh=fixHour(h+tz);
-    const mm=Math.round((hh%1)*60);
-    hh=Math.floor(hh);
-    return `${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}`;
+  const Y=date.getFullYear(), M=date.getMonth()+1, D=date.getDate();
+  // Julian day at UTC midnight of the given local date
+  const jd = julianDay(Y,M,D);
+  // UTC offset at noon for that day
+  const tzOffset = getTZOffset(tzName, date);
+
+  const {eqT, decl} = sunPos(jd + 0.5 - lng/360);
+
+  // Solar noon in UTC hours
+  const noonUTC = 12 - eqT - lng/15;
+
+  // Helper: UTC hour → local minutes integer
+  const utcToLocalMin = utcH => {
+    const local = fix24(utcH + tzOffset);
+    return Math.round(local * 60);
   };
-  const toMin=(h)=>{
-    const tz=new Date().getTimezoneOffset()/-60;
-    let hh=fixHour(h+tz);
-    return Math.floor(hh)*60+Math.round((hh%1)*60);
+  const minToHHMM = m => {
+    m = ((m % 1440) + 1440) % 1440;
+    return `${String(Math.floor(m/60)).padStart(2,'0')}:${String(m%60).padStart(2,'0')}`;
   };
-  return [
-    {name:'الفجر',  icon:'🌙',  time:toHHMM(fajr),    min:toMin(fajr)},
-    {name:'الشروق', icon:'🌅',  time:toHHMM(sunrise), min:toMin(sunrise)},
-    {name:'الظهر',  icon:'☀️',  time:toHHMM(noon),    min:toMin(noon)},
-    {name:'العصر',  icon:'🌤️', time:toHHMM(asr),     min:toMin(asr)},
-    {name:'المغرب', icon:'🌆',  time:toHHMM(sunset),  min:toMin(sunset)},
-    {name:'العشاء', icon:'🌙',  time:toHHMM(isha),    min:toMin(isha)},
+
+  const m = calcMethods[method] || calcMethods.Egypt;
+  const ha_sunrise = hourAngle(-0.8333, lat, decl);
+  const sunriseUTC = noonUTC - ha_sunrise;
+  const sunsetUTC  = noonUTC + ha_sunrise;
+  const fajrUTC    = noonUTC - hourAngle(-m.fajrAngle, lat, decl);
+
+  // Asr: altitude angle when shadow = 1× object height (Shafi'i method)
+  const asrAlt = Math.atan(1/(1 + Math.tan(Math.abs((lat - decl)*D2R)))) * R2D; // positive angle
+  const asrUTC = noonUTC + hourAngle(asrAlt, lat, decl);
+
+  const ishaUTC = m.ishaInterval
+    ? sunsetUTC + m.ishaInterval/60
+    : noonUTC + hourAngle(-m.ishaAngle, lat, decl);
+
+  const times = [
+    {name:'الفجر',  icon:'🌙',  utc: fajrUTC},
+    {name:'الشروق', icon:'🌅',  utc: sunriseUTC},
+    {name:'الظهر',  icon:'☀️',  utc: noonUTC},
+    {name:'العصر',  icon:'🌤️', utc: asrUTC},
+    {name:'المغرب', icon:'🌆',  utc: sunsetUTC},
+    {name:'العشاء', icon:'🌙',  utc: ishaUTC},
   ];
+
+  return times.map(t => {
+    const min = utcToLocalMin(t.utc);
+    return {name:t.name, icon:t.icon, time:minToHHMM(min), min:((min%1440)+1440)%1440};
+  });
 }
 
 // ══════════════ STATE ══════════════
@@ -1081,7 +1118,7 @@ let userLat=36.469,userLng=2.83,userTZ='Africa/Algiers',userCity='البليدة
 let calcMethod='Egypt',locMethod='gps';
 let count=0,target=33,totalToday=0,curDhikr=0;
 let ayahIdx=new Date().getDay()%7;
-let compassOn=false,isPlaying=false;
+let isPlaying=false;
 let curSurah=1,curQA=0,qAyahs=[];
 let notifToggles={};
 
@@ -1137,7 +1174,7 @@ function applyCountryCity(){
   userLat=cityData.lat;
   userLng=cityData.lng;
   userTZ=cityData.tz||COUNTRIES[country].tz;
-  updateFromCoords(userLat,userLng,`${city||country}، ${country}`);
+  updateFromCoords(userLat,userLng,`${city||country}، ${country}`,userTZ);
 }
 
 function applyManualTimes(){
@@ -1175,19 +1212,20 @@ function getGPS(){
       userCity=bestCity||'موقعك';
       userCountry=bestCountry||'';
       const label=bestCity?`${bestCity}، ${bestCountry}`:`${userLat.toFixed(2)}°، ${userLng.toFixed(2)}°`;
-      updateFromCoords(userLat,userLng,label);
+      updateFromCoords(userLat,userLng,label,userTZ);
     },
     err=>{
       setLocStatus('error','تعذّر الوصول للموقع — تم استخدام موقع افتراضي');
       document.getElementById('locTxt').textContent='الجزائر 🇩🇿';
-      updateFromCoords(36.469,2.83,'البليدة، الجزائر');
+      updateFromCoords(36.469,2.83,'البليدة، الجزائر','Africa/Algiers');
     },
     {timeout:8000}
   );
 }
 
-function updateFromCoords(lat,lng,label){
-  const computed=computePrayers(lat,lng,new Date(),calcMethod);
+function updateFromCoords(lat,lng,label,tz){
+  if(tz) userTZ=tz;
+  const computed=computePrayers(lat,lng,new Date(),calcMethod,userTZ);
   prayers=computed;
   setLocStatus('success',`📍 ${label} — ${calcMethod}`);
   document.getElementById('locTxt').textContent=label;
@@ -1200,20 +1238,12 @@ function updateFromCoords(lat,lng,label){
     document.getElementById('heroTagline').textContent=`📍 ${label}`;
     document.getElementById('profileLoc').textContent=`📍 ${label} 🌍`;
   }
-  // Update qibla
+  // Update qibla angle display
   const qa=calcQiblaAngle(lat,lng);
   document.getElementById('qiblaTitle').textContent=`القبلة — ${qa.toFixed(0)}° من الشمال`;
   updateUI();
   updateInfoBoxes();
   buildNotifications();
-}
-
-function calcQiblaAngle(lat,lng){
-  const kLat=21.422;const kLng=39.826;
-  const dLng=toRad(kLng-lng);
-  const y=Math.sin(dLng)*Math.cos(toRad(kLat));
-  const x=Math.cos(toRad(lat))*Math.sin(toRad(kLat))-Math.sin(toRad(lat))*Math.cos(toRad(kLat))*Math.cos(dLng);
-  return (toDeg(Math.atan2(y,x))+360)%360;
 }
 
 function setLocStatus(type,msg){
@@ -1324,23 +1354,75 @@ function buildCalendar(){
 }
 
 // ══════════════ QIBLA ══════════════
+function calcQiblaAngle(lat,lng){
+  const kLat=21.4225*D2R, kLng=39.8262*D2R;
+  const lat1=lat*D2R, dLng=(kLng - lng*D2R);
+  const y=Math.sin(dLng)*Math.cos(kLat);
+  const x=Math.cos(lat1)*Math.sin(kLat)-Math.sin(lat1)*Math.cos(kLat)*Math.cos(dLng);
+  return ((Math.atan2(y,x)*R2D)+360)%360;
+}
+
+let compassActive=false;
+
 function activateCompass(){
-  if(compassOn)return;
-  const go=()=>{
-    compassOn=true;
-    document.getElementById('cRing').classList.add('stopped');
-    document.getElementById('qHint').textContent='✓ البوصلة مفعّلة — اتجه نحو القبلة';
-    window.addEventListener('deviceorientationabsolute',e=>{
-      const a=e.alpha||0;
-      const n=document.getElementById('cNeedle');
-      const qa=calcQiblaAngle(userLat,userLng);
-      n.style.cssText=`position:absolute;left:50%;bottom:50%;transform:translate(-50%,0) rotate(${-a+qa}deg);transform-origin:center bottom;width:5px;height:58px;display:flex;flex-direction:column;`;
-    });
-  };
-  if(typeof DeviceOrientationEvent==='undefined'){document.getElementById('qHint').textContent='غير مدعوم';return;}
-  if(typeof DeviceOrientationEvent.requestPermission==='function'){
-    DeviceOrientationEvent.requestPermission().then(r=>{if(r==='granted')go();else showToast('❌ تم رفض إذن البوصلة');});
-  }else go();
+  if(compassActive) return;
+  const hint=document.getElementById('qHint');
+  const needle=document.getElementById('cNeedle');
+  const ring=document.getElementById('cRing');
+
+  function applyHeading(heading){
+    const qibla = calcQiblaAngle(userLat, userLng);
+    const rotation = qibla - heading;
+    needle.style.cssText=`
+      position:absolute;left:50%;bottom:50%;
+      transform:translate(-50%,0) rotate(${rotation}deg);
+      transform-origin:center bottom;
+      width:5px;height:58px;
+      display:flex;flex-direction:column;
+      transition:transform 0.3s ease;
+    `;
+  }
+
+  function startListening(){
+    compassActive = true;
+    ring.classList.add('stopped');
+    const qa = calcQiblaAngle(userLat, userLng);
+    hint.textContent = `✓ مفعّلة — القبلة: ${qa.toFixed(0)}° من الشمال`;
+
+    // Try deviceorientationabsolute first (Android Chrome)
+    let gotAbsolute = false;
+    window.addEventListener('deviceorientationabsolute', e=>{
+      if(e.alpha == null) return;
+      gotAbsolute = true;
+      applyHeading(e.alpha);
+    }, true);
+
+    // deviceorientation fallback (iOS uses webkitCompassHeading)
+    window.addEventListener('deviceorientation', e=>{
+      if(gotAbsolute) return;
+      if(e.webkitCompassHeading != null){
+        applyHeading(e.webkitCompassHeading);
+      } else if(e.absolute && e.alpha != null){
+        applyHeading(e.alpha);
+      } else if(e.alpha != null){
+        applyHeading(e.alpha);
+      }
+    }, true);
+
+    showToast(`🧭 القبلة: ${qa.toFixed(0)}° من الشمال`);
+  }
+
+  if(typeof DeviceOrientationEvent === 'undefined'){
+    hint.textContent = '⚠️ البوصلة غير مدعومة في هذا المتصفح';
+    return;
+  }
+  if(typeof DeviceOrientationEvent.requestPermission === 'function'){
+    DeviceOrientationEvent.requestPermission()
+      .then(r=>{ if(r==='granted') startListening(); else { hint.textContent='❌ تم رفض إذن البوصلة'; }})
+      .catch(()=>startListening());
+  } else {
+    startListening();
+  }
 }
 
 // ══════════════ QURAN ══════════════
@@ -1434,7 +1516,7 @@ loadSurah();
 renderAyah();
 buildCalendar();
 // Initial prayers using Blida coords
-updateFromCoords(36.469,2.83,'البليدة، الجزائر');
+updateFromCoords(36.469,2.83,'البليدة، الجزائر','Africa/Algiers');
 
 setInterval(()=>{updateDate();updateCountdown();updateRamadan();checkNotifs();},1000);
 setInterval(()=>{renderPrayers();},30000);
