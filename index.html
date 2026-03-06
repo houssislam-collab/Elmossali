@@ -491,7 +491,7 @@ footer{text-align:center;padding:22px 14px;border-top:1px solid rgba(255,255,255
 <!-- ══════════════════════════════════════════════
      AUTH SCREEN
 ══════════════════════════════════════════════ -->
-<div id="auth" class="gone">
+<div id="auth">
   <div class="auth-rings">
     <div class="ar-ring"></div><div class="ar-ring"></div>
     <div class="ar-ring"></div><div class="ar-ring"></div>
@@ -1041,7 +1041,7 @@ function doGuest(){loginOK({id:'guest',name:'زائر كريم',city:'',email:''
 function loginOK(user){
   me=user;
   if(!user.guest) store.set('mu_sess',user);
-  document.getElementById('auth').classList.add('gone');
+  document.getElementById('auth').style.display='none';
   document.getElementById('app').style.display='block';
   applyUser(user);
   toast(`أهلاً بك ${user.name} 🌙`);
@@ -1062,7 +1062,7 @@ function applyUser(u){
 function logout(){
   store.del('mu_sess'); me=null;
   document.getElementById('app').style.display='none';
-  document.getElementById('auth').classList.remove('gone');
+  document.getElementById('auth').style.display='flex';
   document.getElementById('umenu').classList.remove('show');
   document.getElementById('lEmail').value='';
   document.getElementById('lPass').value='';
@@ -1079,15 +1079,15 @@ function showProfileToast(){
 
 // Auto-login from session
 (()=>{
-  const sess=store.get('mu_sess');
-  if(sess&&sess.id){
-    // Show app immediately
-    document.getElementById('auth').classList.add('gone');
-    document.getElementById('app').style.display='block';
-    me=sess; applyUser(sess);
-  } else {
-    document.getElementById('auth').classList.remove('gone');
-  }
+  try {
+    const sess=store.get('mu_sess');
+    if(sess&&sess.id){
+      document.getElementById('auth').style.display='none';
+      document.getElementById('app').style.display='block';
+      me=sess; applyUser(sess);
+    }
+    // else: auth already visible (no class needed)
+  } catch(e) { /* show auth */ }
 })();
 
 /* ══════════════════════════════════════════════
