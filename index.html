@@ -23,15 +23,10 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
 ::-webkit-scrollbar{width:3px;}
 ::-webkit-scrollbar-thumb{background:rgba(201,168,76,.2);border-radius:2px;}
 
-/* ── CANVAS ── */
 #bg{position:fixed;inset:0;z-index:0;pointer-events:none;}
 
-/* ── SPLASH ── */
-#splash{
-  position:fixed;inset:0;z-index:999;
-  background:var(--n0);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;
-}
+/* SPLASH */
+#splash{position:fixed;inset:0;z-index:999;background:var(--n0);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;}
 .sp-icon{width:86px;height:86px;border-radius:50%;border:2px solid var(--g1);display:flex;align-items:center;justify-content:center;font-size:2.4rem;box-shadow:0 0 36px rgba(201,168,76,.3);animation:spGlow 1.4s ease-in-out infinite alternate;}
 @keyframes spGlow{from{box-shadow:0 0 24px rgba(201,168,76,.2);}to{box-shadow:0 0 56px rgba(201,168,76,.55);}}
 .sp-title{font-size:1.9rem;color:var(--g2);font-family:'Amiri',serif;}
@@ -40,14 +35,8 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
 .sp-fill{height:100%;background:linear-gradient(90deg,var(--tl),var(--g1));animation:spBar 2s ease forwards;}
 @keyframes spBar{from{width:0}to{width:100%}}
 
-/* ── AUTH ── */
-#auth{
-  position:fixed;inset:0;z-index:100;
-  display:none; /* shown by JS after splash */
-  align-items:center;justify-content:center;padding:16px;
-  background:radial-gradient(ellipse at 50% 0%,#0d1840,var(--n0) 70%);
-  overflow-y:auto;
-}
+/* AUTH */
+#auth{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;padding:16px;background:radial-gradient(ellipse at 50% 0%,#0d1840,var(--n0) 70%);overflow-y:auto;}
 .auth-rings{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;}
 .ar{position:absolute;border-radius:50%;border:1px solid rgba(201,168,76,.07);animation:arBreath 5s ease-in-out infinite;}
 .ar:nth-child(1){width:320px;height:320px;margin:-160px 0 0 -160px;}
@@ -57,15 +46,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
 .auth-parts{position:fixed;inset:0;pointer-events:none;overflow:hidden;}
 .ap{position:absolute;opacity:0;animation:apRise linear infinite;}
 @keyframes apRise{0%{transform:translateY(110vh);opacity:0;}10%{opacity:.5;}90%{opacity:.5;}100%{transform:translateY(-60px);opacity:0;}}
-.ac{
-  position:relative;z-index:10;
-  width:100%;max-width:420px;
-  background:linear-gradient(160deg,rgba(17,27,53,.97),rgba(6,9,15,.99));
-  border:1px solid var(--brd2);border-radius:26px;
-  padding:38px 28px 28px;
-  box-shadow:0 20px 70px rgba(0,0,0,.7);
-  overflow:hidden;
-}
+.ac{position:relative;z-index:10;width:100%;max-width:420px;background:linear-gradient(160deg,rgba(17,27,53,.97),rgba(6,9,15,.99));border:1px solid var(--brd2);border-radius:26px;padding:38px 28px 28px;box-shadow:0 20px 70px rgba(0,0,0,.7);overflow:hidden;}
 .ac::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--g1),var(--g2),var(--g1),transparent);}
 .ac-logo{text-align:center;margin-bottom:24px;}
 .ac-icon{width:72px;height:72px;border-radius:50%;margin:0 auto 12px;border:2px solid var(--g1);display:flex;align-items:center;justify-content:center;font-size:2.1rem;box-shadow:0 0 28px rgba(201,168,76,.22);animation:spGlow 3s ease-in-out infinite alternate;}
@@ -79,12 +60,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
 .fw{position:relative;}
 .fi{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:.9rem;color:var(--tx3);pointer-events:none;}
 .eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:.9rem;color:var(--tx3);cursor:pointer;background:none;border:none;padding:4px;}
-.finput{
-  width:100%;padding:11px 38px 11px 13px;
-  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);
-  border-radius:11px;color:var(--tx);font-family:inherit;font-size:.86rem;
-  outline:none;transition:all .3s;direction:rtl;
-}
+.finput{width:100%;padding:11px 38px 11px 13px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:11px;color:var(--tx);font-family:inherit;font-size:.86rem;outline:none;transition:all .3s;direction:rtl;}
 .finput:focus{border-color:var(--brd2);background:rgba(201,168,76,.04);}
 .finput::placeholder{color:var(--tx3);}
 .ferr{font-size:.67rem;color:var(--er);margin-top:4px;display:none;}
@@ -103,10 +79,10 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
 .gbtn{width:100%;margin-top:9px;padding:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:11px;color:var(--tx2);font-family:inherit;font-size:.83rem;transition:all .3s;}
 .gbtn:hover{background:rgba(255,255,255,.08);}
 
-/* ── APP (hidden until login) ── */
+/* APP */
 #app{display:none;}
 
-/* ── NAVBAR ── */
+/* NAVBAR */
 nav{position:fixed;top:0;left:0;right:0;z-index:50;height:56px;background:rgba(6,9,15,.93);backdrop-filter:blur(16px);border-bottom:1px solid var(--brd);display:flex;align-items:center;justify-content:space-between;padding:0 12px;gap:8px;}
 nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--g1),transparent);}
 .nb{display:flex;align-items:center;gap:8px;font-family:'Amiri',serif;font-size:1.1rem;color:var(--g2);white-space:nowrap;}
@@ -128,7 +104,14 @@ nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;backg
 .umi.red:hover{background:rgba(231,76,60,.08);color:var(--er);}
 .um-sep{height:1px;background:rgba(255,255,255,.05);margin:3px 0;}
 
-/* ── HERO ── */
+/* LOCATION STATUS BAR */
+.loc-status{background:linear-gradient(90deg,rgba(13,115,119,.15),rgba(201,168,76,.08));border:1px solid rgba(13,115,119,.3);border-radius:12px;padding:10px 16px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.ls-info{font-size:.75rem;color:var(--tl2);}
+.ls-loc{font-size:.68rem;color:var(--tx2);margin-top:2px;}
+.ls-btn{background:linear-gradient(135deg,var(--tl),var(--tl2));border:none;color:#fff;padding:6px 14px;border-radius:20px;font-size:.72rem;font-family:inherit;cursor:pointer;white-space:nowrap;transition:all .3s;}
+.ls-btn:hover{opacity:.85;}
+
+/* HERO */
 .hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:68px 16px 230px;overflow:hidden;background:radial-gradient(ellipse at 50% -5%,#162550,var(--n1) 45%,var(--n0));}
 .aurora{position:absolute;inset:-15%;background:radial-gradient(ellipse 80% 40% at 20% 30%,rgba(201,168,76,.05),transparent 60%),radial-gradient(ellipse 60% 50% at 80% 20%,rgba(13,115,119,.07),transparent 60%);animation:auM 14s ease-in-out infinite alternate;pointer-events:none;}
 @keyframes auM{from{transform:translate(-2%,-2%);}to{transform:translate(2%,2%);}}
@@ -159,7 +142,7 @@ nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;backg
 @keyframes sb{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(7px);}}
 @keyframes fu{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
 
-/* ── MAIN ── */
+/* MAIN */
 .main{position:relative;z-index:5;max-width:960px;margin:0 auto;padding:22px 11px 72px;}
 .sec{margin-bottom:26px;}
 .sh{font-family:'Amiri',serif;font-size:1.08rem;color:var(--g2);margin-bottom:13px;display:flex;align-items:center;gap:10px;}
@@ -229,7 +212,7 @@ nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;backg
 .ic-lb{font-size:.63rem;color:var(--tx3);margin-bottom:2px;}
 .ic-vl{font-size:.96rem;font-weight:700;color:var(--g2);}
 
-/* Calendar */
+/* Calendar - FIXED */
 .cal{background:var(--card);border:1px solid var(--brd);border-radius:18px;padding:18px;overflow-x:auto;}
 .cal-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px;}
 .cal-ti{font-family:'Amiri',serif;font-size:.92rem;color:var(--g2);}
@@ -367,7 +350,6 @@ footer{text-align:center;padding:20px 14px;border-top:1px solid rgba(255,255,255
       <div class="a-tab on" id="tLogin" onclick="swTab('login')">تسجيل الدخول</div>
       <div class="a-tab" id="tReg" onclick="swTab('reg')">إنشاء حساب</div>
     </div>
-    <!-- LOGIN FORM -->
     <div id="fLogin">
       <div class="fg">
         <div class="flbl">📧 البريد أو اسم المستخدم</div>
@@ -383,7 +365,6 @@ footer{text-align:center;padding:20px 14px;border-top:1px solid rgba(255,255,255
       <div class="or-line"><span>أو</span></div>
       <button class="gbtn" onclick="doGuest()">👋 متابعة كضيف</button>
     </div>
-    <!-- REGISTER FORM -->
     <div id="fReg" style="display:none">
       <div class="fg">
         <div class="flbl">👤 الاسم الكامل</div>
@@ -464,7 +445,7 @@ footer{text-align:center;padding:20px 14px;border-top:1px solid rgba(255,255,255
         </svg>
       </div>
       <div class="cd-time" id="cdTime">00:00:00</div>
-      <button class="loc-btn" onclick="getLoc()">📍 <span id="locTxt">تحديد موقعك</span></button>
+      <button class="loc-btn" onclick="getLoc()">📍 <span id="locTxt">تحديد موقعك تلقائياً</span></button>
     </div>
     <div class="scroll-h"><span>▼</span><span>اسحب للأسفل</span></div>
     <div class="mosque-wrap">
@@ -472,13 +453,8 @@ footer{text-align:center;padding:20px 14px;border-top:1px solid rgba(255,255,255
         <defs>
           <linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="transparent"/><stop offset="100%" stop-color="#06090F" stop-opacity=".98"/></linearGradient>
           <linearGradient id="dg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#162060"/><stop offset="100%" stop-color="#0C1220"/></linearGradient>
-          <linearGradient id="gl" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#C9A84C" stop-opacity="0"/><stop offset="50%" stop-color="#C9A84C" stop-opacity=".5"/><stop offset="100%" stop-color="#C9A84C" stop-opacity="0"/></linearGradient>
         </defs>
         <rect width="1400" height="220" fill="url(#sg)"/>
-        <rect x="0" y="155" width="92" height="65" fill="#0a1020" opacity=".5"/>
-        <rect x="102" y="135" width="64" height="85" fill="#0a1020" opacity=".5"/>
-        <rect x="1168" y="146" width="74" height="74" fill="#0a1020" opacity=".5"/>
-        <rect x="1252" y="126" width="64" height="94" fill="#0a1020" opacity=".5"/>
         <rect x="282" y="11" width="24" height="209" fill="url(#dg)"/>
         <polygon points="282,11 294,-6 306,11" fill="#0C1220"/>
         <text x="287" y="8" font-size="12" fill="#C9A84C" opacity=".9">☽</text>
@@ -496,12 +472,6 @@ footer{text-align:center;padding:20px 14px;border-top:1px solid rgba(255,255,255
         <ellipse cx="700" cy="70" rx="133" ry="119" fill="url(#dg)"/>
         <rect x="567" y="70" width="266" height="150" fill="url(#dg)"/>
         <text x="683" y="50" font-size="30" fill="#C9A84C" opacity=".88">☽</text>
-        <rect x="580" y="108" width="24" height="32" rx="12" fill="#06090F" opacity=".6"/>
-        <rect x="622" y="108" width="24" height="32" rx="12" fill="#06090F" opacity=".6"/>
-        <rect x="754" y="108" width="24" height="32" rx="12" fill="#06090F" opacity=".6"/>
-        <rect x="796" y="108" width="24" height="32" rx="12" fill="#06090F" opacity=".6"/>
-        <rect x="675" y="102" width="50" height="40" rx="25" fill="#06090F" opacity=".5"/>
-        <rect x="664" y="154" width="72" height="66" rx="36" fill="#06090F" opacity=".76"/>
         <rect x="0" y="214" width="1400" height="8" fill="#06090F"/>
       </svg>
     </div>
@@ -517,11 +487,21 @@ footer{text-align:center;padding:20px 14px;border-top:1px solid rgba(255,255,255
         <div class="pst">
           <div><div class="psn" id="stP">0</div><div class="psl">صلوات اليوم</div></div>
           <div><div class="psn" id="stT">0</div><div class="psl">تسبيحات</div></div>
-          <div><div class="psn">12</div><div class="psl">رمضان 1447</div></div>
+          <div><div class="psn" id="ramDayNum">12</div><div class="psl">رمضان 1447</div></div>
         </div>
       </div>
     </div>
-    <div class="dbar"><div class="hij">12 رمضان 1447</div><div class="grg" id="gDate">—</div></div>
+
+    <!-- Location Status Bar -->
+    <div class="loc-status" id="locStatusBar">
+      <div>
+        <div class="ls-info" id="lsInfo">📍 لم يُحدَّد الموقع بعد — مواقيت افتراضية</div>
+        <div class="ls-loc" id="lsLoc">اضغط لتحديد موقعك وضبط مواقيت الأذان بدقة</div>
+      </div>
+      <button class="ls-btn" onclick="getLoc()">📡 تحديد تلقائي</button>
+    </div>
+
+    <div class="dbar"><div class="hij" id="hijDate">12 رمضان 1447</div><div class="grg" id="gDate">—</div></div>
     <div class="gdiv"></div>
     <div class="pprog" id="secP">
       <div class="ppt"><span>تقدم الصلوات</span><span id="ppC">0 / 5</span></div>
@@ -538,13 +518,22 @@ footer{text-align:center;padding:20px 14px;border-top:1px solid rgba(255,255,255
       </div>
     </div>
     <div class="igrid">
-      <div class="ic"><div class="ic-top"><div><div class="ic-lb">الشروق</div><div class="ic-vl" id="sunT">07:20</div></div><div class="ic-ico">🌅</div></div></div>
-      <div class="ic"><div class="ic-top"><div><div class="ic-lb">منتصف الليل</div><div class="ic-vl">00:20</div></div><div class="ic-ico">🌃</div></div></div>
-      <div class="ic"><div class="ic-top"><div><div class="ic-lb">الثلث الأخير</div><div class="ic-vl">02:11</div></div><div class="ic-ico">⭐</div></div></div>
+      <div class="ic"><div class="ic-top"><div><div class="ic-lb">الشروق</div><div class="ic-vl" id="sunT">—</div></div><div class="ic-ico">🌅</div></div></div>
+      <div class="ic"><div class="ic-top"><div><div class="ic-lb">الغروب</div><div class="ic-vl" id="sunSet">—</div></div><div class="ic-ico">🌇</div></div></div>
+      <div class="ic"><div class="ic-top"><div><div class="ic-lb">الثلث الأخير</div><div class="ic-vl" id="lastThird">—</div></div><div class="ic-ico">⭐</div></div></div>
     </div>
+
+    <!-- FIXED CALENDAR -->
     <div class="sec"><div class="sh">📅 تقويم رمضان 1447</div>
-      <div class="cal"><div class="cal-hd"><div class="cal-ti">رمضان 1447 هـ</div><div style="font-size:.66rem;color:var(--tx3)">مارس — أبريل 2026</div></div><div class="cgrid" id="calG"></div></div>
+      <div class="cal">
+        <div class="cal-hd">
+          <div class="cal-ti">رمضان 1447 هـ</div>
+          <div style="font-size:.66rem;color:var(--tx3)">مارس — أبريل 2026</div>
+        </div>
+        <div class="cgrid" id="calG"></div>
+      </div>
     </div>
+
     <div class="sec"><div class="sh">🧭 اتجاه القبلة</div>
       <div class="qsec"><h3>البوصلة — اضغط للتفعيل</h3>
         <div class="comp-outer" onclick="startCompass()">
@@ -611,15 +600,12 @@ footer{text-align:center;padding:20px 14px;border-top:1px solid rgba(255,255,255
     </div>
     <div class="sec" id="secN"><div class="sh">🔔 إشعارات الصلاة</div><div class="nfsec" id="nfList"></div></div>
   </div>
-  <footer><div class="ft" id="ftNm">المصلّي الذهبي</div><div>© 2026 — تطبيق مواقيت الصلاة</div></footer>
+  <footer><div class="ft" id="ftNm">المصلّي الذهبي</div><div>© 2026 — مواقيت الأذان حسب موقعك الجغرافي</div></footer>
 </div>
 
-<!-- MODAL -->
 <div class="mov" id="modal" onclick="modalBg(event)">
   <div class="mb"><div class="mt" id="mT"></div><div class="mar" id="mAr"></div><div class="mtr" id="mTr"></div><button class="mcl" onclick="closeModal()">✕ إغلاق</button></div>
 </div>
-
-<!-- TOAST -->
 <div id="toast"></div>
 
 <script>
@@ -679,11 +665,7 @@ var S={
 };
 
 /* ═══════════ PASSWORD HASH ═══════════ */
-function hashPw(pw){
-  var h=0;
-  for(var i=0;i<pw.length;i++){h=((h<<5)-h)+pw.charCodeAt(i);h=h&h;}
-  return 'h'+Math.abs(h).toString(36)+pw.length;
-}
+function hashPw(pw){var h=0;for(var i=0;i<pw.length;i++){h=((h<<5)-h)+pw.charCodeAt(i);h=h&h;}return 'h'+Math.abs(h).toString(36)+pw.length;}
 
 /* ═══════════ AUTH STATE ═══════════ */
 var me=null;
@@ -695,17 +677,8 @@ function swTab(t){
   document.getElementById('tReg').classList.toggle('on',t==='reg');
   clearErrs();
 }
-
 function showPw(id){var i=document.getElementById(id);i.type=i.type==='password'?'text':'password';}
-
-function strChk(v){
-  var s=0;
-  if(v.length>=6)s++; if(v.length>=10)s++; if(/[A-Z0-9!@#]/.test(v))s++;
-  var f=document.getElementById('strF');
-  f.style.width=['0%','35%','70%','100%'][s];
-  f.style.background=['','#e74c3c','#f39c12','#27ae60'][s]||'';
-}
-
+function strChk(v){var s=0;if(v.length>=6)s++;if(v.length>=10)s++;if(/[A-Z0-9!@#]/.test(v))s++;var f=document.getElementById('strF');f.style.width=['0%','35%','70%','100%'][s];f.style.background=['','#e74c3c','#f39c12','#27ae60'][s]||'';}
 function clearErrs(){document.querySelectorAll('.ferr').forEach(function(e){e.classList.remove('on');});}
 function showErr(id,msg){var e=document.getElementById(id);e.textContent=msg;e.classList.add('on');}
 
@@ -721,7 +694,6 @@ function doLogin(){
   if(!found||found.pw!==hashPw(pw)){showErr('eLP','البريد أو كلمة المرور غير صحيحة');return;}
   loginOK(found);
 }
-
 function doReg(){
   clearErrs();
   var name=document.getElementById('rNm').value.trim();
@@ -741,23 +713,16 @@ function doReg(){
   users[user.id]=user; S.set('mu_users',users);
   loginOK(user);
 }
-
-function doGuest(){
-  loginOK({id:'guest',name:'زائر كريم',city:'',email:'',av:'🙂',guest:true});
-}
-
+function doGuest(){loginOK({id:'guest',name:'زائر كريم',city:'',email:'',av:'🙂',guest:true});}
 function loginOK(user){
   me=user;
   if(!user.guest) S.set('mu_sess',user);
-  // hide auth, show app
   document.getElementById('auth').style.display='none';
   document.getElementById('app').style.display='block';
   applyUser(user);
   toast('أهلاً بك '+user.name+' 🌙');
-  // start all app features
   startApp();
 }
-
 function applyUser(u){
   var av=u.av||'🙂', loc=u.city?'📍 '+u.city:'';
   document.getElementById('nAv').textContent=av;
@@ -766,55 +731,81 @@ function applyUser(u){
   document.getElementById('hLoc').textContent=loc;
   document.getElementById('pAv').textContent=av;
   document.getElementById('pNm').textContent=u.name;
-  document.getElementById('pLoc').textContent=loc||'📍 لم يُحدَّد الموقع';
+  document.getElementById('pLoc').textContent=loc||'📍 اضغط "تحديد تلقائي" لضبط مواقيت دقيقة';
   document.getElementById('ftNm').textContent=u.name+' — المصلّي الذهبي';
 }
-
 function doLogout(){
   S.del('mu_sess'); me=null;
   document.getElementById('app').style.display='none';
   document.getElementById('auth').style.display='flex';
   document.getElementById('umenu').classList.remove('on');
-  document.getElementById('lEm').value='';
-  document.getElementById('lPw').value='';
+  document.getElementById('lEm').value='';document.getElementById('lPw').value='';
   clearErrs(); swTab('login');
 }
-
 function toggleUMenu(){document.getElementById('umenu').classList.toggle('on');}
 function closeUMenu(){document.getElementById('umenu').classList.remove('on');}
 document.addEventListener('click',function(e){if(!e.target.closest('#upill')) closeUMenu();});
 
-/* ═══════════ PRAYERS ═══════════ */
+/* ═══════════ PRAYERS — DEFAULT (Blida, Algeria) ═══════════ */
 var PRAYERS=[
-  {n:'الفجر', ic:'🌙',t:'05:54',m:354},
-  {n:'الشروق',ic:'🌅',t:'07:20',m:440},
-  {n:'الظهر', ic:'☀️', t:'13:01',m:781},
-  {n:'العصر', ic:'🌤️',t:'16:15',m:975},
-  {n:'المغرب',ic:'🌆',t:'18:47',m:1127},
-  {n:'العشاء',ic:'🌙',t:'20:04',m:1204},
+  {n:'الفجر', ic:'🌙',t:'05:14',m:314},
+  {n:'الشروق',ic:'🌅',t:'06:38',m:398},
+  {n:'الظهر', ic:'☀️', t:'12:40',m:760},
+  {n:'العصر', ic:'🌤️',t:'16:02',m:962},
+  {n:'المغرب',ic:'🌆',t:'18:44',m:1124},
+  {n:'العشاء',ic:'🌙',t:'20:03',m:1203},
 ];
+var userCity='', userLat=null, userLon=null;
+
+/* Reverse geocode to get city name */
+async function reverseGeocode(lat,lon){
+  try{
+    var r=await fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat='+lat+'&lon='+lon+'&accept-language=ar');
+    var j=await r.json();
+    var addr=j.address||{};
+    return addr.city||addr.town||addr.village||addr.county||addr.state||'موقعك الحالي';
+  }catch(e){return 'موقعك الحالي';}
+}
 
 async function fetchTimes(lat,lon){
   try{
-    var d=new Date(),dt=d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
-    var r=await fetch('https://api.aladhan.com/v1/timings/'+dt+'?latitude='+lat+'&longitude='+lon+'&method=2');
+    var d=new Date();
+    var dt=d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
+    var r=await fetch('https://api.aladhan.com/v1/timings/'+dt+'?latitude='+lat+'&longitude='+lon+'&method=3&tune=0,0,0,0,0,0,0,0,0');
     var j=await r.json();
     if(j.code===200){
       var t=j.data.timings;
       function tm(s){var p=s.split(':');return parseInt(p[0])*60+parseInt(p[1]);}
+      // Clean time (remove timezone suffix)
+      function ct(s){return s.replace(/\s*\(.*\)/,'').trim();}
       PRAYERS=[
-        {n:'الفجر', ic:'🌙',t:t.Fajr,   m:tm(t.Fajr)},
-        {n:'الشروق',ic:'🌅',t:t.Sunrise,m:tm(t.Sunrise)},
-        {n:'الظهر', ic:'☀️', t:t.Dhuhr,  m:tm(t.Dhuhr)},
-        {n:'العصر', ic:'🌤️',t:t.Asr,    m:tm(t.Asr)},
-        {n:'المغرب',ic:'🌆',t:t.Maghrib,m:tm(t.Maghrib)},
-        {n:'العشاء',ic:'🌙',t:t.Isha,   m:tm(t.Isha)},
+        {n:'الفجر', ic:'🌙',t:ct(t.Fajr),   m:tm(t.Fajr)},
+        {n:'الشروق',ic:'🌅',t:ct(t.Sunrise),m:tm(t.Sunrise)},
+        {n:'الظهر', ic:'☀️', t:ct(t.Dhuhr),  m:tm(t.Dhuhr)},
+        {n:'العصر', ic:'🌤️',t:ct(t.Asr),    m:tm(t.Asr)},
+        {n:'المغرب',ic:'🌆',t:ct(t.Maghrib),m:tm(t.Maghrib)},
+        {n:'العشاء',ic:'🌙',t:ct(t.Isha),   m:tm(t.Isha)},
       ];
-      document.getElementById('sunT').textContent=t.Sunrise;
+      document.getElementById('sunT').textContent=ct(t.Sunrise);
+      document.getElementById('sunSet').textContent=ct(t.Sunset||t.Maghrib);
+      // Calculate last third of night
+      var ishaM=tm(t.Isha), fajrM=tm(t.Fajr);
+      var nightLen=(fajrM+1440-ishaM)%1440;
+      var lastThirdM=(ishaM+Math.floor(nightLen*2/3))%1440;
+      document.getElementById('lastThird').textContent=pad(Math.floor(lastThirdM/60))+':'+pad(lastThirdM%60);
       renderPrayers(); updateCD(); buildNotif();
-      toast('✅ تم تحديث مواقيت الصلاة');
+
+      // Get city name
+      var city=await reverseGeocode(lat,lon);
+      userCity=city;
+      document.getElementById('lsInfo').textContent='✅ مواقيت دقيقة — '+city;
+      document.getElementById('lsLoc').textContent='خط العرض: '+lat.toFixed(4)+'° | خط الطول: '+lon.toFixed(4)+'°';
+      document.getElementById('locTxt').textContent=city;
+      document.getElementById('hLoc').textContent='📍 '+city;
+      if(me&&!me.guest){document.getElementById('pLoc').textContent='📍 '+city;}
+      toast('✅ مواقيت '+city+' محدّثة');
     }
-  }catch(e){}
+  }catch(e){toast('⚠️ تعذّر تحديث المواقيت — تحقق من الإنترنت');}
 }
 
 var pad=function(n){return String(n).padStart(2,'0');};
@@ -858,7 +849,7 @@ function updateCD(){
 function updateRam(){
   var n=new Date(), nm=n.getHours()*60+n.getMinutes();
   var iftar=PRAYERS.filter(function(p){return p.n==='المغرب';})[0];
-  var iftarMin=iftar?iftar.m:1127;
+  var iftarMin=iftar?iftar.m:1124;
   var diff=(iftarMin-nm)*60-n.getSeconds();
   document.getElementById('iftLbl').textContent=diff<0?'حتى السحور (الفجر)':'حتى الإفطار (المغرب)';
   if(diff<0) diff+=86400;
@@ -867,30 +858,100 @@ function updateRam(){
   document.getElementById('rs').textContent=pad(diff%60);
 }
 
-/* ═══════════ DATE ═══════════ */
+/* ═══════════ DATE & HIJRI ═══════════ */
 var DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
 var MONTHS=['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
-function updateDate(){
-  var n=new Date();
-  document.getElementById('gDate').textContent=DAYS[n.getDay()]+'، '+n.getDate()+' '+MONTHS[n.getMonth()]+' '+n.getFullYear();
+var HIJRI_MONTHS=['محرم','صفر','ربيع الأول','ربيع الثاني','جمادى الأولى','جمادى الثانية','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة'];
+
+function toHijri(date){
+  // Approximate Hijri conversion
+  var jd=Math.floor((date.getTime()/86400000)+2440587.5);
+  var l=jd-1948440+10632;
+  var n=Math.floor((l-1)/10631);
+  l=l-10631*n+354;
+  var j=(Math.floor((10985-l)/5316))*(Math.floor((50*l)/17719))+(Math.floor(l/5670))*(Math.floor((43*l)/15238));
+  l=l-(Math.floor((30-j)/15))*(Math.floor((17719*j)/50))-(Math.floor(j/16))*(Math.floor((15238*j)/43))+29;
+  var month=Math.floor((24*l)/709);
+  var day=l-Math.floor((709*month)/24);
+  var year=30*n+j-30;
+  return {day:day,month:month,year:year};
 }
 
-/* ═══════════ CALENDAR ═══════════ */
+function updateDate(){
+  var n=new Date();
+  var h=toHijri(n);
+  document.getElementById('gDate').textContent=DAYS[n.getDay()]+'، '+n.getDate()+' '+MONTHS[n.getMonth()]+' '+n.getFullYear();
+  document.getElementById('hijDate').textContent=h.day+' '+HIJRI_MONTHS[h.month-1]+' '+h.year;
+  document.getElementById('ramDayNum').textContent=h.month===9?h.day:'?';
+}
+
+/* ═══════════ CALENDAR — FIXED ═══════════ */
+// Ramadan 1447 starts: 1 March 2026 (Saturday = day index 6)
+// So day 1 of Ramadan = Saturday 1 March 2026
+// Days of week: 0=Sun,1=Mon,...,6=Sat
+// Calendar headers: أح=Sun, إث=Mon, ثل=Tue, أر=Wed, خم=Thu, جم=Fri, سب=Sat
+
 function buildCal(){
-  var g=document.getElementById('calG'); g.innerHTML='';
-  ['أح','إث','ثل','أر','خم','جم','سب'].forEach(function(d){
-    var el=document.createElement('div');el.className='cdhd';el.textContent=d;g.appendChild(el);
+  var g=document.getElementById('calG');
+  g.innerHTML='';
+  
+  // Day headers (Sun to Sat in Arabic)
+  var dayHeaders=['أح','إث','ثل','أر','خم','جم','سب'];
+  dayHeaders.forEach(function(d){
+    var el=document.createElement('div');
+    el.className='cdhd';
+    // Highlight Friday header
+    if(d==='جم') el.style.color='var(--tl2)';
+    el.textContent=d;
+    g.appendChild(el);
   });
-  // padding (Monday start = 1 empty cell)
-  g.appendChild(document.createElement('div'));
+  
+  // Ramadan 1 = Saturday 1 March 2026 → dayOfWeek index = 6
+  // We need to fill empty cells before day 1
+  // Sunday=0, Saturday=6 → 6 empty cells before first day
+  var startDow=6; // Saturday
+  for(var e=0;e<startDow;e++){
+    var empty=document.createElement('div');
+    empty.className='cd2';
+    empty.style.background='transparent';
+    empty.style.border='none';
+    g.appendChild(empty);
+  }
+
+  // Today: March 7 = Ramadan day 7
+  var today=new Date();
+  var todayGreg=today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear();
+  
   for(var day=1;day<=30;day++){
-    var el=document.createElement('div');el.className='cd2';
-    var dow=(1+day-1)%7;
+    var el=document.createElement('div');
+    el.className='cd2';
+    
+    // Gregorian date for this Ramadan day
+    // Ramadan 1 = March 1, 2026
+    var gDate=new Date(2026,2,day); // month is 0-indexed, so 2=March
+    var gDay=gDate.getDate();
+    var gMonth=gDate.getMonth()+1;
+    var gYear=gDate.getFullYear();
+    
+    // Day of week (0=Sun, 6=Sat)
+    var dow=gDate.getDay();
+    
+    // Mark Fridays
     if(dow===5) el.classList.add('fri');
-    if(day===12) el.classList.add('today');
+    
+    // Mark today
+    var todayD=today.getDate(),todayM=today.getMonth()+1,todayY=today.getFullYear();
+    if(gDay===todayD && gMonth===todayM && gYear===todayY){
+      el.classList.add('today');
+    }
+    
+    // Mark odd nights (last 10 days: 21,23,25,27,29)
     if([21,23,25,27,29].indexOf(day)>=0) el.classList.add('odd');
-    var gd=new Date(2026,2,1+day);
-    el.innerHTML='<span class="cdn">'+day+'</span><span class="cdg">'+gd.getDate()+'/'+(gd.getMonth()+1)+'</span>';
+    
+    // Format the Gregorian date label
+    var gLabel=gDay+'/'+(gMonth===3?'3':gMonth===4?'4':gMonth);
+    
+    el.innerHTML='<span class="cdn">'+day+'</span><span class="cdg">'+gLabel+'</span>';
     g.appendChild(el);
   }
 }
@@ -898,15 +959,28 @@ function buildCal(){
 /* ═══════════ LOCATION ═══════════ */
 function getLoc(){
   var el=document.getElementById('locTxt');
-  if(!navigator.geolocation){el.textContent='غير مدعوم';return;}
-  el.textContent='⏳ جاري...';
+  var lsInfo=document.getElementById('lsInfo');
+  if(!navigator.geolocation){el.textContent='غير مدعوم';lsInfo.textContent='❌ GPS غير مدعوم في متصفحك';return;}
+  el.textContent='⏳ جاري التحديد...';
+  lsInfo.textContent='⏳ جاري تحديد موقعك...';
   navigator.geolocation.getCurrentPosition(
     function(pos){
-      var lat=pos.coords.latitude, lon=pos.coords.longitude;
-      el.textContent=lat.toFixed(2)+'°، '+lon.toFixed(2)+'°';
-      fetchTimes(lat,lon);
+      userLat=pos.coords.latitude;
+      userLon=pos.coords.longitude;
+      el.textContent=userLat.toFixed(3)+'°، '+userLon.toFixed(3)+'°';
+      lsInfo.textContent='⏳ جاري تحميل مواقيت الأذان...';
+      fetchTimes(userLat,userLon);
     },
-    function(){el.textContent='تعذّر التحديد';}
+    function(err){
+      var msg='تعذّر التحديد';
+      if(err.code===1) msg='تم رفض إذن الموقع';
+      else if(err.code===2) msg='الموقع غير متاح';
+      else if(err.code===3) msg='انتهت مهلة التحديد';
+      el.textContent=msg;
+      lsInfo.textContent='❌ '+msg+' — تُستخدم مواقيت افتراضية';
+      toast('⚠️ '+msg);
+    },
+    {enableHighAccuracy:true,timeout:12000,maximumAge:300000}
   );
 }
 
@@ -945,18 +1019,11 @@ var SURAHS={
   113:[{a:'﴿ قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ ﴾'},{a:'﴿ مِن شَرِّ مَا خَلَقَ ﴾'},{a:'﴿ وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ ﴾'},{a:'﴿ وَمِن شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ ﴾'},{a:'﴿ وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ ﴾'}],
   114:[{a:'﴿ قُلْ أَعُوذُ بِرَبِّ النَّاسِ ﴾'},{a:'﴿ مَلِكِ النَّاسِ ﴾'},{a:'﴿ إِلَٰهِ النَّاسِ ﴾'},{a:'﴿ مِن شَرِّ الْوَسْوَاسِ الْخَنَّاسِ ﴾'},{a:'﴿ الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ ﴾'},{a:'﴿ مِنَ الْجِنَّةِ وَالنَّاسِ ﴾'}],
 };
-var SOFF={1:1,36:441,55:723,67:977,78:1235,112:6222,113:6226,114:6231};
+var SOFF={1:1,36:441,55:723,67:977,112:6222,113:6226,114:6231};
 var qSur=1, qAy=0, qAys=SURAHS[1], playing=false;
 
-function loadSurah(){
-  qSur=parseInt(document.getElementById('surahSel').value);
-  qAys=SURAHS[qSur]||[{a:'﴿ بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ ﴾'}];
-  qAy=0; renderQAy(); stopAudio();
-}
-function renderQAy(){
-  document.getElementById('qDisp').textContent=qAys[qAy]?qAys[qAy].a:'';
-  document.getElementById('qCnt').textContent=(qAy+1)+' / '+qAys.length;
-}
+function loadSurah(){qSur=parseInt(document.getElementById('surahSel').value);qAys=SURAHS[qSur]||[{a:'﴿ بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ ﴾'}];qAy=0;renderQAy();stopAudio();}
+function renderQAy(){document.getElementById('qDisp').textContent=qAys[qAy]?qAys[qAy].a:'';document.getElementById('qCnt').textContent=(qAy+1)+' / '+qAys.length;}
 function qNext(){qAy=(qAy+1)%qAys.length;renderQAy();}
 function qPrev(){qAy=(qAy-1+qAys.length)%qAys.length;renderQAy();}
 function togglePlay(){if(playing){stopAudio();return;}
@@ -992,16 +1059,7 @@ var DHIKRS=['سبحان الله','الحمد لله','الله أكبر','لا 
 var cnt=0, tgt=33, totDay=0, curDh=0;
 function dhChange(){curDh=parseInt(document.getElementById('dhSel').value);document.getElementById('dhTxt').textContent=DHIKRS[curDh];cReset();}
 function cCustom(){var t=prompt('أدخل ذكرك المخصص:');if(t&&t.trim()){DHIKRS.push(t.trim());var o=document.createElement('option');o.value=DHIKRS.length-1;o.textContent=t.trim();document.getElementById('dhSel').appendChild(o);document.getElementById('dhSel').value=DHIKRS.length-1;dhChange();}}
-function tap(){
-  cnt++;totDay++;
-  document.getElementById('cNum').textContent=cnt;
-  document.getElementById('cTot').textContent=totDay;
-  document.getElementById('stT').textContent=totDay;
-  var pct=Math.min(100,Math.round(cnt/tgt*100));
-  document.getElementById('cprog').style.background='conic-gradient(var(--g1) '+pct*3.6+'deg,transparent 0)';
-  if(cnt>=tgt){document.getElementById('ctr').classList.add('done');toast('🎉 أتممت '+tgt+' '+DHIKRS[curDh]);}
-  if(navigator.vibrate) navigator.vibrate(12);
-}
+function tap(){cnt++;totDay++;document.getElementById('cNum').textContent=cnt;document.getElementById('cTot').textContent=totDay;document.getElementById('stT').textContent=totDay;var pct=Math.min(100,Math.round(cnt/tgt*100));document.getElementById('cprog').style.background='conic-gradient(var(--g1) '+pct*3.6+'deg,transparent 0)';if(cnt>=tgt){document.getElementById('ctr').classList.add('done');toast('🎉 أتممت '+tgt+' '+DHIKRS[curDh]);}if(navigator.vibrate) navigator.vibrate(12);}
 function cReset(){cnt=0;document.getElementById('cNum').textContent=0;document.getElementById('ctr').classList.remove('done');document.getElementById('cprog').style.background='conic-gradient(var(--g1) 0deg,transparent 0)';}
 function setTgt(){var t=prompt('أدخل الهدف:',tgt);if(t&&!isNaN(t)&&parseInt(t)>0){tgt=parseInt(t);document.getElementById('tgtN').textContent=tgt;cReset();}}
 
@@ -1034,20 +1092,11 @@ function togNf(i,el){nfToggles[i]=!el.classList.contains('on');el.classList.togg
 function checkNotif(){if(typeof Notification==='undefined'||Notification.permission!=='granted') return;var nm=nowMin();PRAYERS.forEach(function(p,i){if(nfToggles[i]===false) return;var d=p.m-nm;if(d>0&&d<1) new Notification('🕌 '+p.n,{body:'حان وقت صلاة '+p.n+' — '+p.t,tag:'p'+i});});}
 
 /* ═══════════ LANGUAGE ═══════════ */
-function setLang(l){
-  document.querySelectorAll('.lb').forEach(function(b,i){b.classList.toggle('on',['ar','fr','en'][i]===l);});
-  toast(l==='ar'?'اللغة: العربية':l==='fr'?'Langue: Français':'Language: English');
-}
+function setLang(l){document.querySelectorAll('.lb').forEach(function(b,i){b.classList.toggle('on',['ar','fr','en'][i]===l);});toast(l==='ar'?'اللغة: العربية':l==='fr'?'Langue: Français':'Language: English');}
 
 /* ═══════════ TOAST ═══════════ */
 var toastT=null;
-function toast(msg,dur){
-  dur=dur||3000;
-  var t=document.getElementById('toast');
-  t.textContent=msg; t.classList.add('on');
-  clearTimeout(toastT);
-  toastT=setTimeout(function(){t.classList.remove('on');},dur);
-}
+function toast(msg,dur){dur=dur||3000;var t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove('on');},dur);}
 
 /* ═══════════ NAV ═══════════ */
 function scrollTop(){window.scrollTo({top:0,behavior:'smooth'});}
@@ -1065,29 +1114,33 @@ function startApp(){
   updateRam();
   buildCal();
   buildNotif();
+  // Auto-detect location on start
+  getLoc();
   setInterval(function(){updateCD();updateRam();checkNotif();},1000);
   setInterval(function(){renderPrayers();updateDate();},30000);
+  // Re-fetch prayer times daily at midnight
+  setInterval(function(){
+    var n=new Date();
+    if(n.getHours()===0&&n.getMinutes()===1&&userLat&&userLon){
+      fetchTimes(userLat,userLon);
+    }
+  },60000);
 }
 
 /* ═══════════ SPLASH + BOOT ═══════════ */
-// After 2s: hide splash, show auth (or app if session exists)
 setTimeout(function(){
-  // fade out splash
   var sp=document.getElementById('splash');
   sp.style.transition='opacity 0.45s';
   sp.style.opacity='0';
   setTimeout(function(){
     sp.style.display='none';
-    // check session
     var sess=S.get('mu_sess');
     if(sess&&sess.id&&sess.name){
-      // auto login
       me=sess;
       document.getElementById('app').style.display='block';
       applyUser(sess);
       startApp();
     } else {
-      // show auth
       document.getElementById('auth').style.display='flex';
     }
   },460);
