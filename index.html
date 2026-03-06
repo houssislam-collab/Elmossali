@@ -967,10 +967,13 @@ const store={
   del(k){try{localStorage.removeItem(k);}catch{}}
 };
 
-/* ══════════════════════════════════════════════
-   AUTH
-══════════════════════════════════════════════ */
-let me=null; // current user object
+// Simple hash - reliable on all browsers
+function hashPw(pw){
+  let h=0;
+  for(let i=0;i<pw.length;i++){h=((h<<5)-h)+pw.charCodeAt(i);h|=0;}
+  return 'pw_'+Math.abs(h).toString(36)+'_'+pw.length;
+}
+let me=null;
 
 function sw(t){
   document.getElementById('lForm').style.display=t==='login'?'block':'none';
@@ -1010,7 +1013,7 @@ function doLogin(){
 
   const users=store.get('mu_users')||{};
   const user=Object.values(users).find(u=>u.email===em||u.name===em);
-  if(!user||user.pw!==btoa(unescape(encodeURIComponent(pw)))){
+  if(!user||user.pw!==hashPw(pw)){
     showErr('lPErr','البريد الإلكتروني أو كلمة المرور غير صحيحة');return;
   }
   loginOK(user);
@@ -1031,7 +1034,7 @@ function doReg(){
   if(Object.values(users).find(u=>u.email===email)){
     showErr('rEErr','هذا البريد مستخدم مسبقاً');return;
   }
-  const user={id:Date.now(),name,city:city||'',email,pw:btoa(unescape(encodeURIComponent(pw))),av:selAv};
+  const user={id:Date.now(),name,city:city||'',email,pw:hashPw(pw),av:selAv};
   users[user.id]=user; store.set('mu_users',users);
   loginOK(user);
 }
@@ -1045,6 +1048,7 @@ function loginOK(user){
   document.getElementById('app').style.display='block';
   applyUser(user);
   toast(`أهلاً بك ${user.name} 🌙`);
+  startApp();
 }
 
 function applyUser(u){
@@ -1485,7 +1489,11 @@ function go(id){document.getElementById(id)?.scrollIntoView({behavior:'smooth',b
 /* ══════════════════════════════════════════════
    SPLASH & INIT
 ══════════════════════════════════════════════ */
-function initApp(){
+let appStarted=false;
+
+function startApp(){
+  if(appStarted) return;
+  appStarted=true;
   updateDate();
   renderPrayers();
   renderAyah();
@@ -1505,7 +1513,8 @@ function initApp(){
   },{passive:true});
 }
 
-initApp();
+// If session auto-login already happened above, start app now
+if(me) startApp();
 </script>
 </body>
 </html>
