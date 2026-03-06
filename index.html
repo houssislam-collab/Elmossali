@@ -8,8 +8,10 @@
 <meta property="og:title" content="المصلّي الذهبي">
 <meta property="og:description" content="مواقيت الصلاة · القرآن · الذكر · تقويم رمضان">
 <title>المصلّي الذهبي</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700;900&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<!-- Fonts load async — never block render -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700;900&family=Playfair+Display:wght@700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700;900&family=Playfair+Display:wght@700&display=swap" rel="stylesheet"></noscript>
 <style>
 /* ════════════════════════════════════════════
    DESIGN TOKENS
@@ -28,7 +30,7 @@
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html{scroll-behavior:smooth;font-size:16px;}
-body{font-family:'Cairo',sans-serif;background:var(--n0);color:var(--tx);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+body{font-family:'Cairo','Segoe UI',Tahoma,Arial,sans-serif;background:var(--n0);color:var(--tx);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
 ::selection{background:rgba(201,168,76,.25);}
 ::-webkit-scrollbar{width:3px;}
 ::-webkit-scrollbar-track{background:var(--n0);}
@@ -483,6 +485,8 @@ footer{text-align:center;padding:22px 14px;border-top:1px solid rgba(255,255,255
   <div class="splash-sub">LOADING · جاري التحميل</div>
   <div class="splash-bar"><div class="splash-fill"></div></div>
 </div>
+<!-- Hide splash after exactly 2s no matter what -->
+<script>setTimeout(function(){var s=document.getElementById('splash');if(s){s.style.opacity='0';s.style.transition='opacity 0.4s';setTimeout(function(){s.style.display='none';},420);}},2000);</script>
 
 <!-- ══════════════════════════════════════════════
      AUTH SCREEN
@@ -1481,14 +1485,6 @@ function go(id){document.getElementById(id)?.scrollIntoView({behavior:'smooth',b
 /* ══════════════════════════════════════════════
    SPLASH & INIT
 ══════════════════════════════════════════════ */
-function hideSplash(){
-  const sp=document.getElementById('splash');
-  if(!sp||sp.style.display==='none') return;
-  sp.style.opacity='0';
-  sp.style.transition='opacity 0.5s ease';
-  setTimeout(()=>{ sp.style.display='none'; },550);
-}
-
 function initApp(){
   updateDate();
   renderPrayers();
@@ -1507,14 +1503,9 @@ function initApp(){
     secs.forEach(s=>{const el=document.getElementById(s.id);if(el&&el.offsetTop<=y) active=s.btn;});
     tabs.forEach((t,i)=>t.classList.toggle('on',i===active));
   },{passive:true});
-  // Hide splash after loading bar animation (1.8s) + small buffer
-  setTimeout(hideSplash, 2100);
 }
 
-// ── Run immediately, no waiting ──
 initApp();
-// Nuclear failsafe: if still showing after 4s, force hide
-setTimeout(hideSplash, 4000);
 </script>
 </body>
 </html>
